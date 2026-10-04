@@ -1,0 +1,16 @@
+# Ignore node_modules and Next.js build cache
+frontend/node_modules
+frontend/.next
+frontend/out
+frontend/.vercel
+
+# Ignore Go build artifacts
+backend/backend/bin
+backend/backend/vendor
+
+# Ignore version control and logs
+.git
+.gitignore
+*.log
+.DS_Store
+Thumbs.db

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 450" width="100%" height="100%">
+  <g fill="rgba(255, 255, 255, 0.04)" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- District 1: Karangjambu (North West) -->
+    <path d="M 120 40 L 170 30 L 190 70 L 150 95 L 110 70 Z" />
+
+    <!-- District 2: Karangreja (North Central) -->
+    <path d="M 170 30 L 240 20 L 260 65 L 210 90 L 190 70 Z" />
+
+    <!-- District 3: Karanganyar (North East) -->
+    <path d="M 240 20 L 320 35 L 340 85 L 280 100 L 260 65 Z" />
+
+    <!-- District 4: Rembang (Far East) -->
+    <path d="M 320 35 L 420 60 L 440 140 L 370 150 L 340 85 Z" />
+
+    <!-- District 5: Karangmoncol (East Central) -->
+    <path d="M 280 100 L 340 85 L 370 150 L 310 165 L 270 130 Z" />
+
+    <!-- District 6: Bobotsari (Central North) -->
+    <path d="M 190 70 L 260 65 L 280 100 L 240 135 L 180 115 Z" />
+
+    <!-- District 7: Kertanegara (Central) -->
+    <path d="M 240 135 L 310 165 L 290 200 L 230 180 Z" />
+
+    <!-- District 8: Kutasari (West) -->
+    <path d="M 60 110 L 120 40 L 150 95 L 130 160 L 70 150 Z" />
+
+    <!-- District 9: Bojongsari (Central West) -->
+    <path d="M 150 95 L 190 70 L 180 115 L 150 170 L 130 160 Z" />
+
+    <!-- District 10: Mrebet (Central North-West) -->
+    <path d="M 180 115 L 240 135 L 230 180 L 170 180 L 150 170 Z" />
+
+    <!-- District 11: Pengadegan (South East) -->
+    <path d="M 310 165 L 370 150 L 400 220 L 340 230 L 290 200 Z" />
+
+    <!-- District 12: Kaligondang (Central South-East) -->
+    <path d="M 230 180 L 290 200 L 340 230 L 310 270 L 240 250 Z" />
+
+    <!-- District 13: Kejobong (Far South East) -->
+    <path d="M 340 230 L 400 220 L 430 300 L 370 330 L 310 270 Z" />
+
+    <!-- District 14: Padamara (West Central) -->
+    <path d="M 70 150 L 130 160 L 140 220 L 80 220 Z" />
+
+    <!-- District 15: Purbalingga (City Center) -->
+    <path d="M 130 160 L 170 180 L 190 230 L 140 220 Z" />
+
+    <!-- District 16: Kalimanah (South West) -->
+    <path d="M 80 220 L 140 220 L 150 280 L 70 270 Z" />
+
+    <!-- District 17: Kemangkon (Far South West) -->
+    <path d="M 70 270 L 150 280 L 180 370 L 100 390 L 50 330 Z" />
+
+    <!-- District 18: Bukateja (Far South Central) -->
+    <path d="M 150 280 L 240 250 L 310 270 L 370 330 L 310 390 L 220 410 L 180 370 Z" />
+  </g>
+
+  <!-- Major Geographic Rivers / Features Outline Overlay -->
+  <path d="M 120 40 Q 180 120 230 180 T 310 390" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.4" stroke-dasharray="4 4" />
+</svg>

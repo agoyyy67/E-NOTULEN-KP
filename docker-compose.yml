@@ -1,0 +1,132 @@
+
+
+# ============================================
+# e-Notulen — Docker Compose (Production)
+# ============================================
+# Usage:
+#   docker compose up -d
+#   docker compose down
+#   docker compose logs -f backend
+# ============================================
+
+services:
+  # ── Frontend (Next.js) ──────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+      args:
+        - NEXT_PUBLIC_USE_MOCK=${NEXT_PUBLIC_USE_MOCK}
+        - NEXT_PUBLIC_APP_NAME=${NEXT_PUBLIC_APP_NAME}
+        - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+        - NEXT_PUBLIC_KEYCLOAK_URL=${NEXT_PUBLIC_KEYCLOAK_URL}
+        - NEXT_PUBLIC_KEYCLOAK_REALM=${NEXT_PUBLIC_KEYCLOAK_REALM}
+        - NEXT_PUBLIC_KEYCLOAK_CLIENT_ID=${NEXT_PUBLIC_KEYCLOAK_CLIENT_ID}
+        - NEXT_PUBLIC_KEYCLOAK_CLIENT_SECRET=${NEXT_PUBLIC_KEYCLOAK_CLIENT_SECRET}
+        - NEXT_PUBLIC_MINIO_URL=${NEXT_PUBLIC_MINIO_URL}
+    container_name: enotulen-frontend
+    restart: unless-stopped
+    ports:
+      - "3004:3004"
+    environment:
+      - NODE_ENV=production
+      - HOSTNAME=0.0.0.0
+      - PORT=3004
+      - APP_PORT=${APP_PORT}
+      - NEXT_PUBLIC_USE_MOCK=${NEXT_PUBLIC_USE_MOCK}
+      - NEXT_PUBLIC_APP_NAME=${NEXT_PUBLIC_APP_NAME}
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - NEXT_PUBLIC_KEYCLOAK_URL=${NEXT_PUBLIC_KEYCLOAK_URL}
+      - NEXT_PUBLIC_KEYCLOAK_REALM=${NEXT_PUBLIC_KEYCLOAK_REALM}
+      - NEXT_PUBLIC_KEYCLOAK_CLIENT_ID=${NEXT_PUBLIC_KEYCLOAK_CLIENT_ID}
+      - NEXT_PUBLIC_KEYCLOAK_CLIENT_SECRET=${NEXT_PUBLIC_KEYCLOAK_CLIENT_SECRET}
+      - NEXT_PUBLIC_MINIO_URL=${NEXT_PUBLIC_MINIO_URL}
+      - KEYCLOAK_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET}
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - enotulen-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3004"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # ── Backend (Go API) ───────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: enotulen-backend
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:${APP_PORT:-8080}"
+    environment:
+      - APP_ENV=production
+      - APP_PORT=${APP_PORT}
+      - DATABASE_URL=${DATABASE_URL}
+      - KEYCLOAK_ISSUER_URL=${KEYCLOAK_ISSUER_URL}
+      - KEYCLOAK_CLIENT_ID=${KEYCLOAK_CLIENT_ID}
+      - KEYCLOAK_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET}
+      - KEYCLOAK_JWKS_URL=${KEYCLOAK_JWKS_URL}
+      - MINIO_ENDPOINT=${MINIO_ENDPOINT}
+      - MINIO_PUBLIC_URL=${MINIO_PUBLIC_URL}
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
+      - MINIO_USE_SSL=${MINIO_USE_SSL}
+      - SKPD_API_URL=${SKPD_API_URL}
+      - SKPD_API_CACHE_TTL=${SKPD_API_CACHE_TTL}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - LOG_FORMAT=${LOG_FORMAT}
+      - MAX_UPLOAD_SIZE_MB=${MAX_UPLOAD_SIZE_MB}
+      - RATE_LIMIT_REQUESTS=${RATE_LIMIT_REQUESTS}
+      - RATE_LIMIT_WINDOW_SECONDS=${RATE_LIMIT_WINDOW_SECONDS}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - enotulen-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "-qO-", "http://localhost:${APP_PORT:-8080}/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  # ── PostgreSQL ─────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: enotulen-postgres
+    restart: unless-stopped
+    ports:
+      - "5430:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./backend/migrations/000001_init_schema.up.sql:/docker-entrypoint-initdb.d/01-init.sql
+    networks:
+      - enotulen-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s 
+
+volumes:
+  postgres-data:
+    driver: local
+
+networks:
+  enotulen-network:
+    driver: bridge
+
