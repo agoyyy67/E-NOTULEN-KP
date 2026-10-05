@@ -37,6 +37,7 @@ type NotulenService interface {
 	AddAttachment(ctx context.Context, userCtx model.UserContext, notulenID uuid.UUID, fileName, fileURL string, fileSize int64, mimeType string) (*model.Attachment, error)
 	DeleteAttachment(ctx context.Context, userCtx model.UserContext, notulenID, attachmentID uuid.UUID) error
 	GetPublicNotulenInfo(ctx context.Context, id uuid.UUID) (*model.PublicNotulenInfo, error)
+	GeneratePublicNotulenPDF(ctx context.Context, id uuid.UUID) ([]byte, string, error)
 	AddPublicAttendee(ctx context.Context, notulenID uuid.UUID, req model.AttendeeInput) error
 }
 
@@ -470,15 +471,65 @@ func (s *notulenService) GetPublicNotulenInfo(ctx context.Context, id uuid.UUID)
 		return nil, err
 	}
 
+	signedBy := n.SignedBy
+	if signedBy == "" {
+		signedBy = n.LedBy
+	}
+	signedByPos := n.SignedByPosition
+	if signedByPos == "" {
+		signedByPos = n.LedByPosition
+	}
+	signedByNIP := n.SignedByNIP
+	if signedByNIP == "" {
+		signedByNIP = n.LedByNIP
+	}
+
 	return &model.PublicNotulenInfo{
-		ID:          n.ID,
-		Title:       n.Title,
-		MeetingDate: n.MeetingDate,
-		StartTime:   n.StartTime,
-		EndTime:     n.EndTime,
-		Location:    n.Location,
-		OPDName:     n.OPDName,
+		ID:               n.ID,
+		Title:            n.Title,
+		MeetingDate:      n.MeetingDate,
+		StartTime:        n.StartTime,
+		EndTime:          n.EndTime,
+		Location:         n.Location,
+		OPDName:          n.OPDName,
+		Status:           n.Status,
+		SignedBy:         signedBy,
+		SignedByPosition: signedByPos,
+		SignedByNIP:      signedByNIP,
+		NotulistName:     n.NotulistName,
+		NotulistPosition: n.NotulistPosition,
+		NotulistNIP:      n.NotulistNIP,
+		FinalizedAt:      n.UpdatedAt,
 	}, nil
+}
+
+func (s *notulenService) GeneratePublicNotulenPDF(ctx context.Context, id uuid.UUID) ([]byte, string, error) {
+	n, err := s.notulenRepo.GetByID(ctx, id)
+	if err != nil {
+		return nil, "", err
+	}
+
+	// Hanya dokumen berstatus final yang sah diunduh salinannya secara publik
+	if n.Status != "final" {
+		return nil, "", ErrForbidden
+	}
+
+	attendees, _ := s.attendeeRepo.GetByNotulenID(ctx, id)
+	n.Attendees = attendees
+
+	attachments, _ := s.attachmentRepo.GetByNotulenID(ctx, id)
+	n.Attachments = attachments
+
+	settings, _ := s.opdRepo.GetOPDSettings(ctx, n.OPDCode)
+	n.OPDSettings = settings
+
+	pdfBytes, err := s.pdfGen.GenerateNotulenPDF(n, settings)
+	if err != nil {
+		return nil, "", err
+	}
+
+	fileName := fmt.Sprintf("Notulen_Rapat_%s.pdf", n.ID.String()[:8])
+	return pdfBytes, fileName, nil
 }
 
 func (s *notulenService) AddPublicAttendee(ctx context.Context, notulenID uuid.UUID, req model.AttendeeInput) error {

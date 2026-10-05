@@ -417,6 +417,8 @@ export default function NotulenDetailPage({
             notulisNip={notulen.notulis_nip}
             tanggal={notulen.tanggal}
             readOnly
+            notulenId={notulen.id}
+            status={notulen.status}
           />
         </div>
 

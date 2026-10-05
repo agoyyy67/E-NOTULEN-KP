@@ -3,6 +3,7 @@ package pdf
 import (
 	"bytes"
 	"crypto/tls"
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"image"
@@ -22,7 +23,11 @@ import (
 	"e-notulen/backend/internal/model"
 
 	"github.com/jung-kurt/gofpdf"
+	"github.com/skip2/go-qrcode"
 )
+
+//go:embed assets/logo-purbalingga-official.png
+var defaultLogoBytes []byte
 
 type PDFGenerator struct{}
 
@@ -68,6 +73,18 @@ func (g *PDFGenerator) GenerateNotulenPDF(notulen *model.Notulen, settings *mode
 				pdf.ImageOptions("opd_logo", 20, 11, 20, 0, false, opt, 0, "")
 				hasLogo = true
 			}
+		}
+	}
+
+	// Fallback ke default logo resmi Pemkab Purbalingga jika logo custom OPD belum diatur atau gagal dimuat
+	if !hasLogo && len(defaultLogoBytes) > 0 {
+		opt := gofpdf.ImageOptions{ImageType: "PNG", ReadDpi: true}
+		pdf.RegisterImageOptionsReader("default_opd_logo", opt, bytes.NewReader(defaultLogoBytes))
+		if pdf.Ok() {
+			pdf.ImageOptions("default_opd_logo", 20, 11, 20, 0, false, opt, 0, "")
+			hasLogo = true
+		} else {
+			pdf.ClearError()
 		}
 	}
 
@@ -286,7 +303,7 @@ func (g *PDFGenerator) GenerateNotulenPDF(notulen *model.Notulen, settings *mode
 	pdf.CellFormat(halfW, 6, cleanPDFText(signerTitle), "", 0, "C", false, 0, "")
 	pdf.CellFormat(halfW, 6, "Notulis,", "", 1, "C", false, 0, "")
 
-	pdf.Ln(20) // Spasi TTD
+	pdf.Ln(22) // Spasi TTD simetris dan bersih untuk kedua pihak
 
 	pdf.SetFont("Times", "BU", 11)
 	pdf.CellFormat(halfW, 6, cleanPDFText(signerName), "", 0, "C", false, 0, "")
@@ -299,6 +316,70 @@ func (g *PDFGenerator) GenerateNotulenPDF(notulen *model.Notulen, settings *mode
 	}
 	pdf.CellFormat(halfW, 5, "NIP. "+cleanPDFText(signerNIP), "", 0, "C", false, 0, "")
 	pdf.CellFormat(halfW, 5, "NIP. "+cleanPDFText(notulistNIP), "", 1, "C", false, 0, "")
+
+	// 5a. Blok Verifikasi Berdiri Sendiri di Bawah Tanda Tangan (hanya untuk dokumen final)
+	if notulen.Status == "final" && notulen.ID.String() != "" && notulen.ID.String() != "00000000-0000-0000-0000-000000000000" {
+		baseURL := os.Getenv("NEXT_PUBLIC_APP_URL")
+		if baseURL == "" {
+			baseURL = os.Getenv("APP_URL")
+		}
+		if baseURL == "" {
+			baseURL = "http://localhost:3004"
+		}
+		baseURL = strings.TrimSuffix(baseURL, "/")
+		verifyURL := fmt.Sprintf("%s/verifikasi/%s", baseURL, notulen.ID.String())
+
+		// Generate QR Code PNG in-memory (256x256 px)
+		qrPNG, err := qrcode.Encode(verifyURL, qrcode.Medium, 256)
+		if err == nil && len(qrPNG) > 0 {
+			qrImageName := fmt.Sprintf("qr_verify_%s", notulen.ID.String()[:8])
+			opt := gofpdf.ImageOptions{ImageType: "PNG", ReadDpi: false}
+			pdf.RegisterImageOptionsReader(qrImageName, opt, bytes.NewReader(qrPNG))
+			if pdf.Ok() {
+				// Pastikan muat di halaman ini atau beri jarak proporsional
+				if pdf.GetY() > 248 {
+					pdf.AddPage()
+				} else {
+					pdf.Ln(6)
+				}
+
+				boxX := 20.0
+				boxY := pdf.GetY()
+				boxW := 170.0
+				boxH := 19.0
+
+				// Background kotak legalitas & garis tipis
+				pdf.SetFillColor(248, 250, 252) // abu-abu lembut
+				pdf.SetDrawColor(203, 213, 225) // border tipis slate
+				pdf.SetLineWidth(0.2)
+				pdf.Rect(boxX, boxY, boxW, boxH, "FD")
+
+				// QR Code di sebelah kiri box
+				qrSize := 15.0
+				pdf.ImageOptions(qrImageName, boxX+2.0, boxY+2.0, qrSize, qrSize, false, opt, 0, "")
+
+				// Teks legalitas di samping QR Code
+				textX := boxX + 20.0
+				pdf.SetXY(textX, boxY+2.8)
+				pdf.SetFont("Times", "B", 8)
+				pdf.SetTextColor(15, 23, 42)
+				pdf.CellFormat(boxW-22.0, 3.8, "VERIFIKASI KEASLIAN DOKUMEN ELEKTRONIK", "", 1, "L", false, 0, "")
+
+				pdf.SetX(textX)
+				pdf.SetFont("Times", "", 7.5)
+				pdf.SetTextColor(51, 65, 85)
+				pdf.CellFormat(boxW-22.0, 3.4, "Dokumen ini telah disahkan dan terdaftar secara elektronik pada Sistem Informasi e-Notulen", "", 1, "L", false, 0, "")
+
+				pdf.SetX(textX)
+				pdf.CellFormat(boxW-22.0, 3.4, "Pemerintah Kabupaten Purbalingga. Pindai QR Code untuk memeriksa keabsahan dokumen.", "", 1, "L", false, 0, "")
+
+				pdf.SetTextColor(0, 0, 0) // reset warna teks
+				pdf.SetY(boxY + boxH + 2.0)
+			} else {
+				pdf.ClearError()
+			}
+		}
+	}
 
 	// 6. Dokumentasi Foto Rapat (Halaman Baru Khusus Lampiran Foto - Gambar 2)
 	var validAttachments []model.Attachment

@@ -486,3 +486,55 @@ func (h *NotulenHandler) SubmitAttendance(w http.ResponseWriter, r *http.Request
 
 	response.Success(w, http.StatusOK, "Berhasil menyimpan absensi", nil, nil)
 }
+
+func (h *NotulenHandler) GetVerificationInfo(w http.ResponseWriter, r *http.Request) {
+	idStr := chi.URLParam(r, "id")
+	id, err := uuid.Parse(idStr)
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, "ID notulen tidak valid", "INVALID_ID", nil)
+		return
+	}
+
+	info, err := h.notulenService.GetPublicNotulenInfo(r.Context(), id)
+	if err != nil {
+		if errors.Is(err, service.ErrNotFound) {
+			response.Error(w, http.StatusNotFound, "Dokumen tidak ditemukan pada arsip sistem", "NOT_FOUND", nil)
+			return
+		}
+		log.Printf("[GetVerificationInfo] error fetching notulen: %v", err)
+		response.Error(w, http.StatusInternalServerError, "Gagal mengambil data verifikasi dokumen", "INTERNAL_ERROR", nil)
+		return
+	}
+
+	response.Success(w, http.StatusOK, "Berhasil mengambil data verifikasi dokumen", info, nil)
+}
+
+func (h *NotulenHandler) DownloadPublicPDF(w http.ResponseWriter, r *http.Request) {
+	idStr := chi.URLParam(r, "id")
+	id, err := uuid.Parse(idStr)
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, "ID notulen tidak valid", "INVALID_ID", nil)
+		return
+	}
+
+	pdfBytes, fileName, err := h.notulenService.GeneratePublicNotulenPDF(r.Context(), id)
+	if err != nil {
+		if errors.Is(err, service.ErrNotFound) {
+			response.Error(w, http.StatusNotFound, "Dokumen tidak ditemukan", "NOT_FOUND", nil)
+			return
+		}
+		if errors.Is(err, service.ErrForbidden) {
+			response.Error(w, http.StatusForbidden, "Salinan resmi hanya tersedia untuk dokumen berstatus final", "FORBIDDEN", nil)
+			return
+		}
+		log.Printf("[DownloadPublicPDF] error generating PDF: %v", err)
+		response.Error(w, http.StatusInternalServerError, "Gagal menghasilkan dokumen PDF", "INTERNAL_ERROR", nil)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/pdf")
+	w.Header().Set("Content-Disposition", fmt.Sprintf("inline; filename=\"%s\"", fileName))
+	w.Header().Set("Content-Length", fmt.Sprintf("%d", len(pdfBytes)))
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write(pdfBytes)
+}

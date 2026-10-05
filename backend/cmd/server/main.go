@@ -135,6 +135,10 @@ func main() {
 	r.Post("/api/v1/public/absensi/{id}", notulenHandler.SubmitAttendance)
 	r.Get("/api/v1/public/opd", opdHandler.ListSKPD)
 
+	// Public Endpoint untuk Verifikasi Dokumen QR Code
+	r.Get("/api/v1/public/notulen/{id}/verify", notulenHandler.GetVerificationInfo)
+	r.Get("/api/v1/public/notulen/{id}/pdf", notulenHandler.DownloadPublicPDF)
+
 	// Public Storage File Proxy (bypasses S3 CORS & AccessDenied for images/PDFs)
 	storageHandlerFunc := func(w http.ResponseWriter, r *http.Request) {
 		objectPath := chi.URLParam(r, "*")

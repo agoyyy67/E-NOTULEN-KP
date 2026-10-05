@@ -17,6 +17,7 @@ const PUBLIC_PATHS = [
   "/api/auth",
   "/api/v1/public",
   "/absensi",
+  "/verifikasi",
   // Static assets & Next internals
   "/_next",
   "/favicon.ico",

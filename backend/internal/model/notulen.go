@@ -151,11 +151,19 @@ type NotulenFilter struct {
 }
 
 type PublicNotulenInfo struct {
-	ID          uuid.UUID `json:"id"`
-	Title       string    `json:"title"`
-	MeetingDate string    `json:"meeting_date"`
-	StartTime   *string   `json:"start_time"`
-	EndTime     *string   `json:"end_time"`
-	Location    string    `json:"location"`
-	OPDName     string    `json:"opd_name"`
+	ID               uuid.UUID `json:"id"`
+	Title            string    `json:"title"`
+	MeetingDate      string    `json:"meeting_date"`
+	StartTime        *string   `json:"start_time"`
+	EndTime          *string   `json:"end_time"`
+	Location         string    `json:"location"`
+	OPDName          string    `json:"opd_name"`
+	Status           string    `json:"status"`
+	SignedBy         string    `json:"signed_by"`
+	SignedByPosition string    `json:"signed_by_position"`
+	SignedByNIP      string    `json:"signed_by_nip"`
+	NotulistName     string    `json:"notulist_name"`
+	NotulistPosition string    `json:"notulist_position"`
+	NotulistNIP      string    `json:"notulist_nip"`
+	FinalizedAt      time.Time `json:"finalized_at"`
 }
