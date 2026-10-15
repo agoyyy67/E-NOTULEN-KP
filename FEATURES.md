@@ -174,3 +174,18 @@ Dokumen ini berisi daftar lengkap dan terperinci fitur-fitur pada aplikasi **e-N
 | 8.3 | Healthcheck Endpoints | 🔴 P0 | ✅ Selesai | Endpoint `/health` dan `/health/db` untuk monitoring kesiapan backend API dan database PostgreSQL |
 | 8.4 | Structured JSON Logging & Panic Recovery | 🔴 P0 | ✅ Selesai | Middleware logging HTTP terstruktur dan pemulihan otomatis dari runtime panic |
 | 8.5 | Auto-Migration Skema Startup | 🔴 P0 | ✅ Selesai | Database PostgreSQL otomatis menerapkan skema SQL saat service backend pertama kali menyala |
+
+---
+
+## 9. 🛡️ Modul Verifikasi Keabsahan Dokumen via QR Code
+
+| # | Fitur | Prioritas | Role | Status | Deskripsi Teknis & Perilaku Sistem |
+| - | ----- | --------- | ---- | ------ | ---------------------------------- |
+| 9.1 | Segel QR Code Dinamis pada Blok Pengesahan | 🔴 P0 | A/O/F | ✅ Selesai | Komponen `SignatureSection.tsx` merender `<QRCodeSVG>` dinamis otomatis saat status dokumen `final` |
+| 9.2 | Proteksi Status Final (Kunci Kanvas Tiptap) | 🔴 P0 | A/O/F | ✅ Selesai | Saat status naskah `final`, editor beralih ke mode read-only dan formulir pengesahan dibekukan |
+| 9.3 | Endpoint Publik Verifikasi Tanpa Auth | 🔴 P0 | P | ✅ Selesai | `GET /api/v1/public/verifikasi/{id}` bebas otentikasi SSO via whitelist di `middleware.ts` |
+| 9.4 | Halaman Publik Verifikasi Dokumen (`/verifikasi/[id]`) | 🔴 P0 | P | ✅ Selesai | Halaman publik responsif untuk menampilkan metadata keabsahan risalah dan identitas penandatangan |
+| 9.5 | Indikator Status Keabsahan Dokumen | 🔴 P0 | P | ✅ Selesai | Kartu status visual: Lencana Hijau ("Dokumen Resmi & Terverifikasi") atau Peringatan jika dokumen belum final / tidak sah |
+| 9.6 | Unduh Salinan PDF Resmi dari Portal Verifikasi | 🟡 P1 | P | ✅ Selesai | Memungkinkan publik/pemeriksa mengunduh berkas salinan digital naskah resmi langsung dari tautan verifikasi |
+| 9.7 | Kompilasi Segel QR Dokumen Fisik Backend | 🔴 P0 | All | ✅ Selesai | Mesin generator PDF Go (`pkg/pdf/pdf_generator.go`) menyematkan kotak verifikasi QR resmi di bawah tanda tangan |
+

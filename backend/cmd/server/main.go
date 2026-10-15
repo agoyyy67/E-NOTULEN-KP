@@ -183,9 +183,11 @@ func main() {
 		r.Delete("/api/v1/notulen/{id}", notulenHandler.Delete)
 		r.Patch("/api/v1/notulen/{id}/status", notulenHandler.UpdateStatus)
 
-		// Restore & Duplicate
+		// Restore & Duplicate & Force Delete
 		r.Post("/api/v1/notulen/{id}/restore", notulenHandler.Restore)
 		r.Post("/api/v1/notulen/{id}/duplicate", notulenHandler.Duplicate)
+		r.Delete("/api/v1/notulen/{id}/force", notulenHandler.ForceDelete)
+		r.Delete("/api/v1/notulen/{id}/permanent", notulenHandler.ForceDelete)
 
 		// Auto-Save
 		r.Post("/api/v1/notulen/{id}/auto-save", notulenHandler.AutoSave)

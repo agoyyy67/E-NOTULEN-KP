@@ -36,6 +36,8 @@ type Notulen struct {
 	CreatedAt        time.Time        `json:"created_at"`
 	UpdatedAt        time.Time        `json:"updated_at"`
 	DeletedAt        *time.Time       `json:"deleted_at,omitempty"`
+	DeletedByName    *string          `json:"deleted_by_name,omitempty"`
+	DeletedBySub     *string          `json:"deleted_by_sub,omitempty"`
 	AttendeeCount    int              `json:"attendee_count"`
 	AttachmentCount  int              `json:"attachment_count"`
 	Attendees        []Attendee       `json:"attendees,omitempty"`

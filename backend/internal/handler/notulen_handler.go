@@ -351,6 +351,24 @@ func (h *NotulenHandler) Restore(w http.ResponseWriter, r *http.Request) {
 	response.Success(w, http.StatusOK, "Notulen berhasil dipulihkan", notulen, nil)
 }
 
+func (h *NotulenHandler) ForceDelete(w http.ResponseWriter, r *http.Request) {
+	userCtx, _ := middleware.GetUserContext(r.Context())
+	idStr := chi.URLParam(r, "id")
+	id, err := uuid.Parse(idStr)
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, "Invalid UUID format", "BAD_REQUEST", nil)
+		return
+	}
+
+	err = h.notulenService.ForceDeleteNotulen(r.Context(), userCtx, id)
+	if err != nil {
+		resolveHTTPError(w, err, "Force delete notulen")
+		return
+	}
+
+	response.Success(w, http.StatusOK, "Notulen berhasil dimusnahkan secara permanen", nil, nil)
+}
+
 func (h *NotulenHandler) Duplicate(w http.ResponseWriter, r *http.Request) {
 	userCtx, _ := middleware.GetUserContext(r.Context())
 	idStr := chi.URLParam(r, "id")

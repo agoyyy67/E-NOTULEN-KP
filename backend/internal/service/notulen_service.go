@@ -27,6 +27,7 @@ type NotulenService interface {
 	UpdateNotulen(ctx context.Context, userCtx model.UserContext, id uuid.UUID, req model.UpdateNotulenRequest) (*model.Notulen, error)
 	DeleteNotulen(ctx context.Context, userCtx model.UserContext, id uuid.UUID) error
 	RestoreNotulen(ctx context.Context, userCtx model.UserContext, id uuid.UUID) (*model.Notulen, error)
+	ForceDeleteNotulen(ctx context.Context, userCtx model.UserContext, id uuid.UUID) error
 	DuplicateNotulen(ctx context.Context, userCtx model.UserContext, id uuid.UUID) (*model.Notulen, error)
 	UpdateNotulenStatus(ctx context.Context, userCtx model.UserContext, id uuid.UUID, status string) error
 	ListNotulen(ctx context.Context, userCtx model.UserContext, filter model.NotulenFilter) ([]model.Notulen, *response.Meta, error)
@@ -265,7 +266,7 @@ func (s *notulenService) DeleteNotulen(ctx context.Context, userCtx model.UserCo
 	if err := s.checkPermission(userCtx, n); err != nil {
 		return err
 	}
-	return s.notulenRepo.SoftDelete(ctx, id)
+	return s.notulenRepo.SoftDelete(ctx, id, userCtx.Name, userCtx.Sub)
 }
 
 func (s *notulenService) RestoreNotulen(ctx context.Context, userCtx model.UserContext, id uuid.UUID) (*model.Notulen, error) {
@@ -283,6 +284,20 @@ func (s *notulenService) RestoreNotulen(ctx context.Context, userCtx model.UserC
 		return nil, fmt.Errorf("failed to restore notulen: %w", err)
 	}
 	return s.GetNotulenByID(ctx, userCtx, id)
+}
+
+func (s *notulenService) ForceDeleteNotulen(ctx context.Context, userCtx model.UserContext, id uuid.UUID) error {
+	n, err := s.notulenRepo.GetByIDIncludeDeleted(ctx, id)
+	if err != nil {
+		return err
+	}
+	if n.DeletedAt == nil {
+		return fmt.Errorf("%w: naskah notulen ini tidak berada di tempat sampah", ErrNotFound)
+	}
+	if err := s.checkPermission(userCtx, n); err != nil {
+		return err
+	}
+	return s.notulenRepo.ForceDelete(ctx, id)
 }
 
 func (s *notulenService) DuplicateNotulen(ctx context.Context, userCtx model.UserContext, id uuid.UUID) (*model.Notulen, error) {

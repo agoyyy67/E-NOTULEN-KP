@@ -15,6 +15,7 @@ import {
   X,
   FileSpreadsheet,
   CalendarDays,
+  Trash2,
   LogOut,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
@@ -47,6 +48,7 @@ const NAVIGATION_ITEMS: NavItem[] = [
     children: [
       { title: "Daftar Notulen", href: "/notulen", icon: <FileText size={15} /> },
       { title: "Buat Notulen Baru", href: "/notulen/create", icon: <PlusCircle size={15} /> },
+      { title: "Tempat Sampah", href: "/notulen?status=deleted", icon: <Trash2 size={15} /> },
     ],
   },
   {

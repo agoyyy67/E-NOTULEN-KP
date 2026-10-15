@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"math"
 	"strings"
+	"time"
 
 	"e-notulen/backend/internal/model"
 	"e-notulen/backend/pkg/response"
@@ -20,8 +21,9 @@ type NotulenRepository interface {
 	GetByID(ctx context.Context, id uuid.UUID) (*model.Notulen, error)
 	GetByIDIncludeDeleted(ctx context.Context, id uuid.UUID) (*model.Notulen, error)
 	Update(ctx context.Context, n *model.Notulen) error
-	SoftDelete(ctx context.Context, id uuid.UUID) error
+	SoftDelete(ctx context.Context, id uuid.UUID, deletedByName string, deletedBySub string) error
 	Restore(ctx context.Context, id uuid.UUID) error
+	ForceDelete(ctx context.Context, id uuid.UUID) error
 	UpdateStatus(ctx context.Context, id uuid.UUID, status string) error
 	List(ctx context.Context, filter model.NotulenFilter) ([]model.Notulen, *response.Meta, error)
 	GetDashboardSummary(ctx context.Context, userRole, opdCode, userSub string) (*model.DashboardSummary, error)
@@ -147,9 +149,9 @@ func (r *notulenRepository) Update(ctx context.Context, n *model.Notulen) error 
 	return err
 }
 
-func (r *notulenRepository) SoftDelete(ctx context.Context, id uuid.UUID) error {
-	query := `UPDATE notulen SET deleted_at = NOW() WHERE id = $1 AND deleted_at IS NULL`
-	_, err := r.db.Exec(ctx, query, id)
+func (r *notulenRepository) SoftDelete(ctx context.Context, id uuid.UUID, deletedByName string, deletedBySub string) error {
+	query := `UPDATE notulen SET deleted_at = NOW(), deleted_by_name = $2, deleted_by_sub = NULLIF($3, '')::uuid WHERE id = $1 AND deleted_at IS NULL`
+	_, err := r.db.Exec(ctx, query, id, deletedByName, deletedBySub)
 	return err
 }
 
@@ -163,7 +165,8 @@ func (r *notulenRepository) GetByIDIncludeDeleted(ctx context.Context, id uuid.U
 			input_type, content, COALESCE(file_url, ''), COALESCE(file_name, ''), COALESCE(summary, ''),
 			opd_code, opd_name, created_by_sub, created_by_name,
 			CASE WHEN deleted_at IS NOT NULL THEN 'deleted' ELSE status END AS status,
-			created_at, updated_at, deleted_at
+			created_at, updated_at, deleted_at,
+			COALESCE(deleted_by_name, created_by_name)
 		FROM notulen
 		WHERE id = $1
 	`
@@ -171,6 +174,7 @@ func (r *notulenRepository) GetByIDIncludeDeleted(ctx context.Context, id uuid.U
 	var n model.Notulen
 	var rawContent []byte
 	var startTime, endTime sql.NullString
+	var deletedByNameStr string
 
 	err := r.db.QueryRow(ctx, query, id).Scan(
 		&n.ID, &n.Title, &n.MeetingDate, &startTime, &endTime, &n.Location,
@@ -180,6 +184,7 @@ func (r *notulenRepository) GetByIDIncludeDeleted(ctx context.Context, id uuid.U
 		&n.InputType, &rawContent, &n.FileURL, &n.FileName, &n.Summary,
 		&n.OPDCode, &n.OPDName, &n.CreatedBySub, &n.CreatedByName, &n.Status,
 		&n.CreatedAt, &n.UpdatedAt, &n.DeletedAt,
+		&deletedByNameStr,
 	)
 	if err != nil {
 		return nil, err
@@ -196,11 +201,21 @@ func (r *notulenRepository) GetByIDIncludeDeleted(ctx context.Context, id uuid.U
 		n.Content = json.RawMessage(rawContent)
 	}
 
+	if deletedByNameStr != "" {
+		n.DeletedByName = &deletedByNameStr
+	}
+
 	return &n, nil
 }
 
 func (r *notulenRepository) Restore(ctx context.Context, id uuid.UUID) error {
-	query := `UPDATE notulen SET deleted_at = NULL, status = 'draft', updated_at = NOW() WHERE id = $1 AND deleted_at IS NOT NULL`
+	query := `UPDATE notulen SET deleted_at = NULL, deleted_by_name = NULL, deleted_by_sub = NULL, status = 'draft', updated_at = NOW() WHERE id = $1 AND deleted_at IS NOT NULL`
+	_, err := r.db.Exec(ctx, query, id)
+	return err
+}
+
+func (r *notulenRepository) ForceDelete(ctx context.Context, id uuid.UUID) error {
+	query := `DELETE FROM notulen WHERE id = $1 AND deleted_at IS NOT NULL`
 	_, err := r.db.Exec(ctx, query, id)
 	return err
 }
@@ -317,7 +332,8 @@ func (r *notulenRepository) List(ctx context.Context, f model.NotulenFilter) ([]
 			n.input_type, COALESCE(n.file_url, ''), COALESCE(n.file_name, ''), COALESCE(n.summary, ''),
 			n.opd_code, n.opd_name, n.created_by_sub, n.created_by_name,
 			CASE WHEN n.deleted_at IS NOT NULL THEN 'deleted' ELSE n.status END AS status,
-			n.created_at, n.updated_at,
+			n.created_at, n.updated_at, n.deleted_at,
+			COALESCE(n.deleted_by_name, n.created_by_name) AS deleted_by_name,
 			(SELECT COUNT(*) FROM notulen_attendees na WHERE na.notulen_id = n.id) AS attendee_count,
 			(SELECT COUNT(*) FROM notulen_attachments nat WHERE nat.notulen_id = n.id) AS attachment_count
 		FROM notulen n
@@ -338,6 +354,8 @@ func (r *notulenRepository) List(ctx context.Context, f model.NotulenFilter) ([]
 	for rows.Next() {
 		var n model.Notulen
 		var startTime, endTime sql.NullString
+		var deletedAt *time.Time
+		var deletedByName sql.NullString
 
 		err := rows.Scan(
 			&n.ID, &n.Title, &n.MeetingDate, &startTime, &endTime, &n.Location,
@@ -346,7 +364,7 @@ func (r *notulenRepository) List(ctx context.Context, f model.NotulenFilter) ([]
 			&n.NotulistName, &n.NotulistPosition, &n.NotulistNIP,
 			&n.InputType, &n.FileURL, &n.FileName, &n.Summary,
 			&n.OPDCode, &n.OPDName, &n.CreatedBySub, &n.CreatedByName, &n.Status,
-			&n.CreatedAt, &n.UpdatedAt,
+			&n.CreatedAt, &n.UpdatedAt, &deletedAt, &deletedByName,
 			&n.AttendeeCount, &n.AttachmentCount,
 		)
 		if err != nil {
@@ -357,6 +375,12 @@ func (r *notulenRepository) List(ctx context.Context, f model.NotulenFilter) ([]
 		}
 		if endTime.Valid {
 			n.EndTime = &endTime.String
+		}
+		if deletedAt != nil {
+			n.DeletedAt = deletedAt
+		}
+		if deletedByName.Valid && deletedByName.String != "" {
+			n.DeletedByName = &deletedByName.String
 		}
 		result = append(result, n)
 	}

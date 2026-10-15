@@ -13,6 +13,7 @@ import {
   FileSpreadsheet,
   Settings,
   ArrowRight,
+  Trash2,
   Command,
   X,
 } from "lucide-react";
@@ -54,6 +55,15 @@ const COMMAND_ITEMS: CommandItem[] = [
     href: "/notulen/create",
     icon: <PlusCircle size={16} />,
     keywords: ["buat", "tambah", "baru", "create", "notulen", "catat"],
+    group: "Notulen Rapat",
+  },
+  {
+    id: "notulen-trash",
+    label: "Tempat Pembuangan Sementara (Trash)",
+    description: "Kelola dokumen notulen yang terhapus lunak (soft delete)",
+    href: "/notulen?status=deleted",
+    icon: <Trash2 size={16} />,
+    keywords: ["trash", "sampah", "restore", "pulihkan", "musnahkan", "hapus"],
     group: "Notulen Rapat",
   },
   {

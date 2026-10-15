@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe Suite e-Notulen | Low-Fidelity UI Specifications</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --wf-bg: #f8fafc;
+      --wf-card: #ffffff;
+      --wf-border: #94a3b8;
+      --wf-border-light: #cbd5e1;
+      --wf-border-dark: #475569;
+      --wf-text: #0f172a;
+      --wf-muted: #64748b;
+      --wf-placeholder: #e2e8f0;
+      --wf-accent: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background-color: #0f172a;
+      color: #334155;
+      padding: 30px;
+    }
+
+    .suite-header {
+      max-width: 1200px;
+      margin: 0 auto 30px auto;
+      background: #1e293b;
+      padding: 24px 30px;
+      border-radius: 12px;
+      color: #f8fafc;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .suite-title h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 6px;
+    }
+
+    .suite-title p {
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    .nav-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      max-width: 1200px;
+      margin: 0 auto 24px auto;
+    }
+
+    .nav-btn {
+      background: #334155;
+      color: #e2e8f0;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+      background: #38bdf8;
+      color: #0f172a;
+    }
+
+    .wf-card-wrapper {
+      max-width: 1100px;
+      margin: 0 auto 40px auto;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .wf-top-bar {
+      background: #1e293b;
+      color: #f8fafc;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #334155;
+    }
+
+    .wf-badge-num {
+      background: #0284c7;
+      color: white;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 10px;
+    }
+
+    .wf-title-text {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .download-btn {
+      background: #0ea5e9;
+      color: #ffffff;
+      border: none;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .download-btn:hover {
+      background: #0284c7;
+    }
+
+    /* ── WIREFRAME CORE STYLES (Low-Fidelity Greyscale) ── */
+    .wireframe-canvas {
+      background: #f1f5f9;
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .wf-screen {
+      background: #ffffff;
+      border: 2px solid var(--wf-border-dark);
+      border-radius: 6px;
+      width: 100%;
+      max-width: 900px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      color: var(--wf-text);
+      font-size: 13px;
+      position: relative;
+    }
+
+    .wf-mobile-screen {
+      max-width: 380px;
+      border-radius: 24px;
+      border: 3px solid var(--wf-border-dark);
+      overflow: hidden;
+    }
+
+    /* Wireframe Components */
+    .wf-header-nav {
+      border-bottom: 2px solid var(--wf-border);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+    }
+
+    .wf-logo-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .wf-img-placeholder {
+      width: 28px;
+      height: 28px;
+      border: 1.5px solid var(--wf-border-dark);
+      background: var(--wf-placeholder);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+      color: var(--wf-border-dark);
+    }
+
+    .wf-box {
+      border: 1.5px solid var(--wf-border);
+      padding: 12px;
+      border-radius: 4px;
+      background: #ffffff;
+    }
+
+    .wf-box-dashed {
+      border: 2px dashed var(--wf-border);
+      padding: 14px;
+      border-radius: 6px;
+      background: #f8fafc;
+      text-align: center;
+    }
+
+    .wf-btn {
+      display: inline-block;
+      padding: 6px 14px;
+      border: 1.5px solid var(--wf-border-dark);
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #ffffff;
+      color: var(--wf-text);
+      text-align: center;
+    }
+
+    .wf-btn-dark {
+      background: var(--wf-border-dark);
+      color: #ffffff;
+    }
+
+    .wf-input {
+      border: 1.5px solid var(--wf-border);
+      background: #f8fafc;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--wf-text);
+      width: 100%;
+    }
+
+    .wf-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border: 1px solid var(--wf-border);
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      background: #f1f5f9;
+    }
+
+    .wf-badge-success {
+      border-color: #059669;
+      background: #ecfdf5;
+      color: #064e3b;
+    }
+
+    .wf-badge-warning {
+      border-color: #d97706;
+      background: #fffbeb;
+      color: #78350f;
+    }
+
+    /* Grid & Flex Utilities */
+    .wf-row { display: flex; gap: 12px; }
+    .wf-col-1 { flex: 1; }
+    .wf-col-2 { flex: 2; }
+    .wf-col-3 { flex: 3; }
+    .wf-flex-between { display: flex; justify-content: space-between; align-items: center; }
+    .wf-gap-8 { gap: 8px; }
+    .wf-mt-8 { margin-top: 8px; }
+    .wf-mt-12 { margin-top: 12px; }
+    .wf-mt-16 { margin-top: 16px; }
+
+    /* Tables */
+    .wf-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .wf-table th, .wf-table td {
+      border: 1px solid var(--wf-border);
+      padding: 7px 10px;
+      text-align: left;
+    }
+
+    .wf-table th {
+      background: #f1f5f9;
+      font-weight: 700;
+    }
+
+    /* QR Code Matrix Placeholder */
+    .wf-qr-matrix {
+      width: 90px;
+      height: 90px;
+      border: 2px dashed var(--wf-border-dark);
+      background: repeating-conic-gradient(#cbd5e1 0% 25%, #ffffff 0% 50%) 50% / 10px 10px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+      color: #1e293b;
+      background-color: #f8fafc;
+    }
+
+    .wf-qr-matrix-lg {
+      width: 160px;
+      height: 160px;
+      background: repeating-conic-gradient(#94a3b8 0% 25%, #ffffff 0% 50%) 50% / 16px 16px;
+    }
+
+    /* Kop Surat Garis Ganda */
+    .wf-double-line {
+      border-top: 3px solid var(--wf-border-dark);
+      border-bottom: 1px solid var(--wf-border-dark);
+      height: 3px;
+      margin: 10px 0 16px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="suite-header">
+    <div class="suite-title">
+      <h1>🏛️ WIREFRAME SUITE E-NOTULEN PEMKAB PURBALINGGA</h1>
+      <p>Kumpulan 10 Desain Kerangka Kawat Low-Fidelity Sesuai APP_FLOW.md dan Subbab 4.2.5 Laporan Kerja Praktik</p>
+    </div>
+    <div>
+      <span style="font-size: 12px; color: #94a3b8; margin-right: 12px;">Standard: Monokromatik & A4 Compliant</span>
+    </div>
+  </div>
+
+  <div class="nav-pills">
+    <a href="#wf-16" class="nav-btn">G-16: Editor A4</a>
+    <a href="#wf-17" class="nav-btn">G-17: Blok Pengesahan QR</a>
+    <a href="#wf-18" class="nav-btn">G-18: Verifikasi Publik</a>
+    <a href="#wf-19" class="nav-btn">G-19: Presensi HP</a>
+    <a href="#wf-20" class="nav-btn">G-20: Modal QR</a>
+    <a href="#wf-21" class="nav-btn">G-21: Login SSO</a>
+    <a href="#wf-22" class="nav-btn">G-22: Dasbor OPD</a>
+    <a href="#wf-23" class="nav-btn">G-23: Tabel Repositori</a>
+    <a href="#wf-24" class="nav-btn">G-24: Command Palette</a>
+    <a href="#wf-25" class="nav-btn">G-25: Trash & Restore</a>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 1. WIREFRAME 16: KANVAS EDITOR NOTULEN A4 & TIPTAP ENGINE -->
+  <!-- ========================================================================= -->
+  <div class="wf-card-wrapper" id="wf-16">
+    <div class="wf-top-bar">
+      <div>
+        <span class="wf-badge-num">GAMBAR 16</span>
+        <span class="wf-title-text">Wireframe: Kanvas Editor Notulen A4 (Toolbar Tiptap, Kanvas Ketik, & Indikator Auto-Save)</span>
+      </div>
+      <button class="download-btn" onclick="downloadWireframe('canvas-16', 'Wireframe_16_Editor_A4_Tiptap')">💾 Unduh PNG</button>
+    </div>
+    <div class="wireframe-canvas">
+      <div class="wf-screen" id="canvas-16" style="padding: 16px;">
+        <!-- Top App Navigation -->
+        <div class="wf-flex-between" style="border-bottom: 2px solid var(--wf-border); padding-bottom: 10px; margin-bottom: 12px;">
+          <div style="display:flex; align-items:center; gap: 8px;">
+            <span class="wf-btn">← Kembali</span>
+            <div>
+              <div style="font-weight: 700; font-size: 14px;">Rapat Koordinasi Penerapan Smart City Purbalingga 2026</div>
+              <div style="font-size: 11px; color: var(--wf-muted);">ID: 7f8a9b1c • Penyelenggara: Dinas Komunikasi dan Informatika</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="wf-btn">👁️ Pratinjau PDF</span>
+            <span class="wf-btn">Simpan Draf</span>
+            <span class="wf-btn wf-btn-dark">Finalisasi Naskah</span>
+          </div>
+        </div>
+
+        <!-- ASPEK 1: TIPTAP FLOATING FORMATTING TOOLBAR & ASPEK 3: AUTOSAVE BADGE -->
+        <div class="wf-box" style="padding: 8px 12px; background: #f8fafc; border: 2px solid var(--wf-border-dark); margin-bottom: 14px;">
+          <div class="wf-flex-between" style="margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid var(--wf-border-light);">
+            <div style="font-size: 11px; font-weight: 700; color: var(--wf-border-dark);">
+              🛠️ TIPTAP v3 RICH-TEXT FORMATTING ENGINE (Click-to-Focus Canvas)
+            </div>
+            <!-- Aspek 3: Indikator AutoSaveBadge -->
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <span class="wf-badge wf-badge-success" style="padding: 4px 10px; font-size: 11px;">
+                <span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #059669; margin-right: 4px;"></span>
+                💾 AutoSave: Tersimpan (14:35 WIB)
+              </span>
+              <span class="wf-btn" style="padding: 2px 6px; font-size: 10px;">Simpan Manual</span>
+            </div>
+          </div>
+
+          <!-- Toolbar Control Icons Group -->
+          <div style="display: flex; gap: 5px; align-items: center; flex-wrap: wrap;">
+            <!-- Gaya Teks -->
+            <span class="wf-btn wf-btn-dark" style="padding: 3px 8px;" title="Cetak Tebal (Ctrl+B)"><b>B</b></span>
+            <span class="wf-btn" style="padding: 3px 8px;" title="Cetak Miring (Ctrl+I)"><i>I</i></span>
+            <span class="wf-btn" style="padding: 3px 8px;" title="Coret Teks"><s>S</s></span>
+            <span style="color: var(--wf-border); margin: 0 2px;">|</span>
+            
+            <!-- Heading Hierarki -->
+            <span class="wf-btn" style="padding: 3px 7px;">H1</span>
+            <span class="wf-btn wf-btn-dark" style="padding: 3px 7px;" title="Sub-Judul Aktif">H2</span>
+            <span class="wf-btn" style="padding: 3px 7px;">H3</span>
+            <span style="color: var(--wf-border); margin: 0 2px;">|</span>
+
+            <!-- Perataan Teks (Alignment) -->
+            <span class="wf-btn" style="padding: 3px 7px;" title="Rata Kiri">≡ L</span>
+            <span class="wf-btn wf-btn-dark" style="padding: 3px 7px;" title="Rata Tengah">≡ C</span>
+            <span class="wf-btn" style="padding: 3px 7px;" title="Rata Kanan">≡ R</span>
+            <span class="wf-btn" style="padding: 3px 7px;" title="Justify">≡ J</span>
+            <span style="color: var(--wf-border); margin: 0 2px;">|</span>
+
+            <!-- Daftar List & Task List -->
+            <span class="wf-btn" style="padding: 3px 7px;">• Bullets</span>
+            <span class="wf-btn" style="padding: 3px 7px;">1. Numbers</span>
+            <span class="wf-btn" style="padding: 3px 7px;">☑ Checklist</span>
+            <span style="color: var(--wf-border); margin: 0 2px;">|</span>
+
+            <!-- Kontrol Tabel Dinamis Tiptap -->
+            <span class="wf-btn" style="padding: 3px 7px;">▦ Tabel</span>
+            <span class="wf-btn" style="padding: 3px 6px; font-size: 10px; background: #ecfdf5; border-color: #059669; color: #064e3b;">+ Baris</span>
+            <span class="wf-btn" style="padding: 3px 6px; font-size: 10px; background: #ecfdf5; border-color: #059669; color: #064e3b;">+ Kolom</span>
+            <span style="color: var(--wf-border); margin: 0 2px;">|</span>
+
+            <!-- History -->
+            <span class="wf-btn" style="padding: 3px 7px;">↶</span>
+            <span class="wf-btn" style="padding: 3px 7px;">↷</span>
+            <span class="wf-btn" style="padding: 3px 7px;">⤢ Fullscreen</span>
+          </div>
+        </div>
+
+        <!-- ASPEK 2: KANVAS KETIK A4 DENGAN INDIKATOR PENGETIKAN AKTIF TIPTAP -->
+        <div style="border: 2px solid var(--wf-border); padding: 30px 40px; background: #ffffff; box-shadow: 0 4px 14px rgba(0,0,0,0.06); min-height: 520px; position: relative;">
+          
+          <!-- Margin Penanda Kertas A4 (Boundary Box) -->
+          <div style="position: absolute; top: 12px; right: 16px; font-size: 10px; color: var(--wf-muted); border: 1px dashed var(--wf-border); padding: 2px 6px; border-radius: 4px;">
+            📄 Format Kertas: A4 (Margin: 2.5cm)
+          </div>
+
+          <!-- Kop Surat Resmi Kedinasan Pemkab Purbalingga -->
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="wf-img-placeholder" style="width: 55px; height: 55px; font-size: 10px; text-align: center;">LOGO PEMKAB</div>
+            <div style="text-align: center; flex: 1;">
+              <div style="font-size: 13px; font-weight: 700;">PEMERINTAH KABUPATEN PURBALINGGA</div>
+              <div style="font-size: 16px; font-weight: 800; letter-spacing: 0.5px;">DINAS KOMUNIKASI DAN INFORMATIKA</div>
+              <div style="font-size: 11px; color: var(--wf-muted);">Jl. Letkol Isdiman No. 17A, Purbalingga, Jawa Tengah 53313</div>
+              <div style="font-size: 11px; color: var(--wf-muted);">Telp: (0281) 891012 | Email: dinkominfo@purbalinggakab.go.id</div>
+            </div>
+          </div>
+          <div class="wf-double-line"></div>
+
+          <!-- Judul Risalah Resmi -->
+          <div style="text-align: center; margin-bottom: 16px;">
+            <div style="font-size: 15px; font-weight: 800; text-decoration: underline;">NOTULEN RAPAT</div>
+            <div style="font-size: 11px; color: var(--wf-muted); margin-top: 3px;">Nomor Agenda: 005 / SPBE / KOMINFO / 2026</div>
+          </div>
+
+          <!-- Metadata Rapat Terstruktur -->
+          <div style="font-size: 12px; line-height: 1.6; margin-bottom: 16px; background: #fafafa; padding: 10px 14px; border: 1px solid var(--wf-border-light); border-radius: 4px;">
+            <div><b>Hari / Tanggal</b> : Selasa, 24 Maret 2026</div>
+            <div><b>Waktu</b> : 09:00 WIB s.d. 12:30 WIB</div>
+            <div><b>Tempat</b> : Ruang Rapat Kadis Lt. 2, DINKOMINFO Purbalingga</div>
+            <div><b>Pimpinan Rapat</b>: Drs. Bambang Wijonarko, M.Si (Kepala Dinas Kominfo)</div>
+          </div>
+
+          <!-- AREA AKTIF PENGETIKAN TIPTAP (PROSEMIRROR CONTENTEDITABLE) -->
+          <div style="border-left: 3px solid #0284c7; padding-left: 12px; margin-top: 14px; font-size: 12px; line-height: 1.7;">
+            <div style="font-size: 10px; font-weight: 700; color: #0284c7; margin-bottom: 4px;">[ AREA KANVAS PENGETIKAN TIPTAP AKTIF ]</div>
+            
+            <div style="font-weight: 700; font-size: 13px;">I. PEMBUKAAN & PENGANTAR RAPAT</div>
+            <p style="color: var(--wf-text); margin: 4px 0 10px 0;">
+              Rapat koordinasi dibuka pada pukul 09.00 WIB oleh Kepala Dinas Komunikasi dan Informatika Kabupaten Purbalingga dengan pengantar mengenai percepatan transformasi naskah dinas elektronik dan evaluasi arsitektur SPBE...
+            </p>
+            
+            <div style="font-weight: 700; font-size: 13px;">II. PEMBAHASAN & REKOMENDASI TINDAK LANJUT</div>
+            <p style="color: var(--wf-text); margin: 4px 0 8px 0;">
+              Hasil evaluasi bersama perwakilan OPD merumuskan beberapa matriks tindak lanjut sebagai berikut:
+            </p>
+
+            <!-- Tabel Dinamis Tiptap dengan Highlight Sel Aktif -->
+            <table class="wf-table" style="margin-bottom: 12px; border: 1.5px solid var(--wf-border-dark);">
+              <thead>
+                <tr style="background: #f1f5f9;">
+                  <th style="width: 28%;">Program / Sasaran</th>
+                  <th style="width: 42%;">Kendala Lapangan</th>
+                  <th style="width: 30%;">Rekomendasi Tindak Lanjut</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Integrasi e-Notulen OPD</td>
+                  <td>Format metadata naskah belum seragam lintas dinas</td>
+                  <td>Standardisasi REST API & Keycloak SSO</td>
+                </tr>
+                <tr style="background: #eff6ff; outline: 2px solid #3b82f6;">
+                  <td>Verifikasi Dokumen Cetak</td>
+                  <td>Potensi manipulasi risalah rapat cetakan fisik</td>
+                  <td><b>Penyematan Segel Dinamis QR Code<span style="animation: blink 1s infinite; font-weight: 900; color: #2563eb;">|</span></b></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Checklist Task Items Tiptap Extension -->
+            <div style="margin: 8px 0;">
+              <div style="font-weight: 700; font-size: 11px; margin-bottom: 4px;">Target Implementasi (Tiptap Task List):</div>
+              <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 3px;">
+                <input type="checkbox" checked readonly> <span>Uji coba formulir absensi mandiri mobile pada rapat pimpinan.</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <input type="checkbox" checked readonly> <span>Pemberlakuan segel QR verifikasi untuk seluruh naskah berstatus final.</span>
+              </div>
+            </div>
+
+            <div style="font-weight: 700; font-size: 13px; margin-top: 10px;">III. KESIMPULAN & PENUTUP</div>
+            <p style="color: var(--wf-text); margin: 4px 0;">
+              Seluruh risalah rapat disepakati untuk dikunci statusnya menjadi final dan diarsipkan secara digital pada repositori terpadu.
+            </p>
+          </div>
+
+          <!-- FOOTER KANVAS: CHARACTER & WORD COUNT STATS -->
+          <div class="wf-flex-between" style="border-top: 1px solid var(--wf-border-light); margin-top: 24px; padding-top: 8px; font-size: 11px; color: var(--wf-muted);">
+            <div>📊 <b>Statistik Teks:</b> 1.480 Karakter • 215 Kata • 3 Paragraf</div>
+            <div>Status Editor: <span style="color: #059669; font-weight: 700;">● Aktif (Ready)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- 2. WIREFRAME 17: BLOK PENGESAHAN NASKAH & SEGELL QR -->
+  <!-- ========================================================================= -->
+  <div class="wf-card-wrapper" id="wf-17">
+    <div class="wf-top-bar">
+      <div>
+        <span class="wf-badge-num">GAMBAR 17</span>
+        <span class="wf-title-text">Wireframe: Blok Pengesahan Naskah Dinamis (SignatureSection & QR Code)</span>
+      </div>
+      <button class="download-btn" onclick="downloadWireframe('canvas-17', 'Wireframe_17_SignatureSection')">💾 Unduh PNG</button>
+    </div>
+    <div class="wireframe-canvas">
+      <div class="wf-screen" id="canvas-17" style="padding: 24px;">
+        <div class="wf-flex-between" style="border-bottom: 1.5px solid var(--wf-border); padding-bottom: 10px; margin-bottom: 16px;">
+          <div>
+            <span style="font-weight: 700; font-size: 14px;">Pratinjau Blok Penandatanganan Resmi</span>
+            <span style="font-size: 11px; color: var(--wf-muted); display: block;">Komponen: SignatureSection.tsx • Render Kondisional Berdasarkan Status</span>
+          </div>
+          <span class="wf-badge wf-badge-success">Status Naskah: FINAL (Terkunci)</span>
+        </div>
+
+        <!-- 2 Columns Dual Signature Layout -->
+        <div class="wf-row" style="margin-top: 20px;">
+          <!-- Column 1: Pimpinan Rapat -->
+          <div class="wf-col-1 wf-box" style="text-align: center; padding: 20px;">
+            <div style="font-size: 12px; font-weight: 600;">Pemimpin Rapat,</div>
+            <div style="font-size: 12px; font-weight: 700; margin-bottom: 16px;">Kepala Dinas Komunikasi dan Informatika</div>
+            
+            <div style="height: 90px; display: flex; align-items: center; justify-content: center; border: 1px dashed var(--wf-border-light); margin: 10px 30px; background: #fafafa;">
+              <span style="font-size: 11px; color: var(--wf-muted);">( Tanda Tangan Basah / Sah )</span>
+            </div>
+            
+            <div style="font-size: 13px; font-weight: 800; text-decoration: underline; margin-top: 10px;">Drs. BAMBANG WIJONARKO, M.Si</div>
+            <div style="font-size: 11px; color: var(--wf-muted);">Pembina Utama Muda (IV/c)</div>
+            <div style="font-size: 11px; font-family: monospace;">NIP. 19710315 199603 1 002</div>
+          </div>
+
+          <!-- Column 2: Pejabat Penandatangan / QR Seal -->
+          <div class="wf-col-1 wf-box" style="text-align: center; padding: 20px; border: 2px solid var(--wf-border-dark);">
+            <div style="font-size: 12px; font-weight: 600;">Purbalingga, 24 Maret 2026</div>
+            <div style="font-size: 12px; font-weight: 700; margin-bottom: 12px;">Notulis / Pencatat Risalah,</div>
+            
+            <!-- Render Kondisional QR Code SVG -->
+            <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin: 8px 0;">
+              <div class="wf-qr-matrix">QR SEGELL</div>
+              <div style="text-align: left; font-size: 10px; line-height: 1.4; max-width: 150px;">
+                <div style="font-weight: 700; color: #064e3b;">VALIDASI ELEKTRONIK</div>
+                <div>Pindai kode QR untuk penelusuran keabsahan naskah fisik di portal resmi Pemkab.</div>
+              </div>
+            </div>
+            
+            <div style="font-size: 13px; font-weight: 800; text-decoration: underline; margin-top: 10px;">BUDI SANTOSO, S.Kom</div>
+            <div style="font-size: 11px; color: var(--wf-muted);">Pranata Komputer Ahli Muda (III/c)</div>
+            <div style="font-size: 11px; font-family: monospace;">NIP. 19850101 201001 1 001</div>
+          </div>
+        </div>
+
+        <div class="wf-box-dashed wf-mt-16" style="text-align: left; font-size: 11px; color: var(--wf-muted);">
+          <b>Catatan Logika Komponen:</b> Apabila status naskah masih <code>draft</code>, segel QR di atas belum dimuat dan sistem menampilkan formulir isian data pejabat. Ketika status dialihkan menjadi <code>final</code>, segel QR otomatis dirender mengodekan URL <code>/verifikasi/[id]</code>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 3. WIREFRAME 18: HALAMAN VERIFIKASI DOKUMEN PUBLIK -->
+  <!-- ========================================================================= -->
+  <div class="wf-card-wrapper" id="wf-18">
+    <div class="wf-top-bar">
+      <div>
+        <span class="wf-badge-num">GAMBAR 18</span>
+        <span class="wf-title-text">Wireframe: Halaman Publik Verifikasi Keabsahan Dokumen (/verifikasi/[id])</span>
+      </div>
+      <button class="download-btn" onclick="downloadWireframe('canvas-18', 'Wireframe_18_Verifikasi_Publik')">💾 Unduh PNG</button>
+    </div>
+    <div class="wireframe-canvas">
+      <div class="wf-screen" id="canvas-18" style="padding: 24px; max-width: 750px;">
+        <!-- Public Header -->
+        <div style="text-align: center; border-bottom: 2px solid var(--wf-border); padding-bottom: 14px; margin-bottom: 20px;">
+          <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 6px;">
+            <div class="wf-img-placeholder" style="width: 32px; height: 32px;">LOGO</div>
+            <span style="font-size: 14px; font-weight: 700;">PEMERINTAH KABUPATEN PURBALINGGA</span>
+          </div>
+          <div style="font-size: 12px; color: var(--wf-muted);">Portal Resmi Penelusuran & Verifikasi Risalah Rapat Digital (e-Notulen)</div>
+        </div>
+
+        <!-- Valid Shield Badge Card -->
+        <div class="wf-box" style="border: 2px solid #059669; background: #ecfdf5; padding: 16px; margin-bottom: 18px; display: flex; align-items: center; gap: 16px;">
+          <div style="font-size: 32px;">🛡️</div>
+          <div>
+            <div style="font-size: 15px; font-weight: 800; color: #064e3b;">DOKUMEN RESMI TERVERIFIKASI</div>
+            <div style="font-size: 12px; color: #065f46; margin-top: 2px;">Risalah rapat ini sah dan telah terdaftar secara otentik pada pangkalan data arsip Pemerintah Kabupaten Purbalingga.</div>
+          </div>
+        </div>
+
+        <!-- Metadata Section -->
+        <div class="wf-box" style="margin-bottom: 16px;">
+          <div style="font-weight: 700; font-size: 13px; border-bottom: 1px solid var(--wf-border-light); padding-bottom: 8px; margin-bottom: 10px;">
+            📋 RINCIAN METADATA RISALAH RAPAT
+          </div>
+          <table style="width: 100%; font-size: 12px; line-height: 1.8;">
+            <tr>
+              <td style="width: 28%; color: var(--wf-muted);">Judul Agenda</td>
+              <td style="font-weight: 700;">: Rapat Koordinasi Penerapan Smart City Purbalingga 2026</td>
+            </tr>
+            <tr>
+              <td style="color: var(--wf-muted);">Hari, Tanggal</td>
+              <td>: Selasa, 24 Maret 2026</td>
+            </tr>
+            <tr>
+              <td style="color: var(--wf-muted);">Waktu & Tempat</td>
+              <td>: 09:00 s.d. 12:30 WIB • Ruang Rapat Kadis Lt. 2 Dinkominfo</td>
+            </tr>
+            <tr>
+              <td style="color: var(--wf-muted);">OPD Penyelenggara</td>
+              <td>: Dinas Komunikasi dan Informatika Kabupaten Purbalingga</td>
+            </tr>
+            <tr>
+              <td style="color: var(--wf-muted);">Nomor ID Naskah</td>
+              <td style="font-family: monospace;">: 7f8a9b1c-2d3e-4f5a-6b7c-8d9e0f1a2b3c</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Two Columns Signatory Info -->
+        <div class="wf-row" style="margin-bottom: 16px;">
+          <div class="wf-col-1 wf-box" style="font-size: 11px; line-height: 1.5;">
+            <div style="font-weight: 700; color: var(--wf-muted); margin-bottom: 4px;">PEJABAT PENANDATANGAN:</div>
+            <div style="font-weight: 700; font-size: 12px;">Drs. Bambang Wijonarko, M.Si</div>
+            <div>NIP. 19710315 199603 1 002</div>
+            <div style="color: var(--wf-muted);">Kepala Dinas Kominfo Purbalingga</div>
+          </div>
+          <div class="wf-col-1 wf-box" style="font-size: 11px; line-height: 1.5;">
+            <div style="font-weight: 700; color: var(--wf-muted); margin-bottom: 4px;">NOTULIS / PENCATAT:</div>
+            <div style="font-weight: 700; font-size: 12px;">Budi Santoso, S.Kom</div>
+            <div>NIP. 19850101 201001 1 001</div>
+            <div style="color: var(--wf-muted);">Pranata Komputer Ahli Muda</div>
+          </div>
+        </div>
+
+        <!-- Download Action Card -->
+        <div class="wf-flex-between wf-box" style="background: #f8fafc; padding: 14px;">
+          <div>
+            <div style="font-weight: 700; font-size: 12px;">Cap Waktu Pengesahan:</div>
+            <div style="font-size: 11px; color: var(--wf-muted);">24 Maret 2026, 14:35 WIB (Terkunci Sistem)</div>
+          </div>
+          <span class="wf-btn wf-btn-dark">📥 Unduh Salinan PDF Resmi</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 4. WIREFRAME 19: PRESENSI MOBILE PESERTA -->
+  <!-- ========================================================================= -->
+  <div class="wf-card-wrapper" id="wf-19">
+    <div class="wf-top-bar">
+      <div>
+        <span class="wf-badge-num">GAMBAR 19</span>
+        <span class="wf-title-text">Wireframe: Antarmuka Mobile-First Presensi Mandiri (/absensi/[id])</span>
+      </div>
+      <button class="download-btn" onclick="downloadWireframe('canvas-19', 'Wireframe_19_Presensi_Mobile')">💾 Unduh PNG</button>
+    </div>
+    <div class="wireframe-canvas">
+      <div class="wf-screen wf-mobile-screen" id="canvas-19" style="padding: 20px;">
+        <!-- Mobile Top Header -->
+        <div style="text-align: center; border-bottom: 1.5px solid var(--wf-border); padding-bottom: 12px; margin-bottom: 16px;">
+          <div class="wf-img-placeholder" style="margin: 0 auto 6px auto;">LOGO</div>
+          <div style="font-size: 12px; font-weight: 700;">PEMKAB PURBALINGGA</div>
+          <div style="font-size: 11px; color: var(--wf-muted);">Formulir Kehadiran Rapat Dinas</div>
+        </div>
+
+        <!-- Meeting Summary Badge -->
+        <div class="wf-box" style="background: #f8fafc; margin-bottom: 16px; font-size: 11px; line-height: 1.5;">
+          <div style="font-weight: 700; font-size: 12px;">Rakor Penerapan Smart City 2026</div>
+          <div style="color: var(--wf-muted);">📅 Selasa, 24 Maret 2026 • 09:00 WIB</div>
+          <div style="color: var(--wf-muted);">📍 Ruang Rapat Kadis Lt. 2 Dinkominfo</div>
+        </div>
+
+        <!-- Input Form -->
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div>
+            <label style="font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px;">Nama Lengkap & Gelar *</label>
+            <input type="text" class="wf-input" placeholder="contoh: Dr. Hendro Prasetyo, M.Eng" value="Dr. Hendro Prasetyo, M.Eng" readonly>
+          </div>
+          <div>
+            <label style="font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px;">Asal Instansi / OPD *</label>
+            <input type="text" class="wf-input" placeholder="Pilih instansi..." value="BKPSDM Purbalingga" readonly>
+          </div>
+          <div>
+            <label style="font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px;">Jabatan Peserta *</label>
+            <input type="text" class="wf-input" placeholder="contoh: Kabid Pembinaan ASN" value="Kepala Bidang Pembinaan ASN" readonly>
+          </div>
+
+          <div style="margin-top: 8px;">
+            <span class="wf-btn wf-btn-dark" style="width: 100%; padding: 10px; font-size: 13px;">📩 Kirim Bukti Kehadiran</span>
+          </div>
+        </div>
+
+        <!-- Confirmation Preview -->
+        <div class="wf-box-dashed wf-mt-16" style="border-color: #059669; background: #ecfdf5; font-size: 11px; color: #064e3b; padding: 10px;">
+          ✅ <b>Presensi Anda Berhasil Dicatat!</b><br/>
+          Terverifikasi pada pukul 09:12 WIB.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 5. WIREFRAME 20: MODAL QR CODE PRESENSI -->
+  <!-- ========================================================================= -->
+  <div class="wf-card-wrapper" id="wf-20">
+    <div class="wf-top-bar">
+      <div>
+        <span class="wf-badge-num">GAMBAR 20</span>
+        <span class="wf-title-text">Wireframe: Modal Penampil Kode QR Presensi & Salin Tautan</span>
+      </div>
+      <button class="download-btn" onclick="downloadWireframe('canvas-20', 'Wireframe_20_Modal_QR')">💾 Unduh PNG</button>
+    </div>
+    <div class="wireframe-canvas">
+      <div class="wf-screen" id="canvas-20" style="padding: 24px; max-width: 500px; text-align: center;">
+        <div class="wf-flex-between" style="border-bottom: 1.5px solid var(--wf-border); padding-bottom: 10px; margin-bottom: 16px;">
+          <div style="font-weight: 700; font-size: 14px;">Dynamic QR Code Presensi Tamu</div>
+          <span style="cursor: pointer; font-weight: bold;">✕</span>
+        </div>
+
+        <p style="font-size: 12px; color: var(--wf-muted); margin-bottom: 16px;">
+          Sorotkan kode QR ini ke layar proyektor ruang rapat agar peserta dapat mengisi kehadiran mandiri melalui kamera ponsel.
+        </p>
+
+        <!-- Large QR Display Matrix -->
+        <div class="wf-qr-matrix wf-qr-matrix-lg" style="margin: 0 auto 16px auto;">
+          [ QR PRESENSI ]
+        </div>
+
+        <div style="font-size: 11px; font-family: monospace; color: var(--wf-muted); margin-bottom: 16px; word-break: break-all;">
+          https://enotulen.purbalinggakab.go.id/absensi/7f8a9b1c-2d3e
+        </div>
+
+        <div class="wf-row" style="justify-content: center; margin-bottom: 16px;">
+          <span class="wf-btn">📋 Salin Tautan</span>
+          <span class="wf-btn">⤢ Tampilan Penuh (Proyektor)</span>
+          <span class="wf-btn wf-btn-dark">💾 Unduh Citra QR</span>
+        </div>
+
+        <div class="wf-box" style="background: #f8fafc; font-size: 12px;">
+          👥 <b>Total Kehadiran Live:</b> <span style="font-weight: 800;">18 Peserta</span> tercatat di sistem.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 6. WIREFRAME 21: HALAMAN LOGIN SSO KEYCLOAK -->
+  <!-- ========================================================================= -->
+  <div class="wf-card-wrapper" id="wf-21">
+    <div class="wf-top-bar">
+      <div>
+        <span class="wf-badge-num">GAMBAR 21</span>
+        <span class="wf-title-text">Wireframe: Halaman Autentikasi Pengguna (Login SSO Keycloak)</span>
+      </div>
+      <button class="download-btn" onclick="downloadWireframe('canvas-21', 'Wireframe_21_Login_SSO')">💾 Unduh PNG</button>
+    </div>
+    <div class="wireframe-canvas">
+      <div class="wf-screen" id="canvas-21" style="padding: 40px 30px; max-width: 440px; text-align: center;">
+        <div class="wf-img-placeholder" style="width: 50px; height: 50px; margin: 0 auto 12px auto;">LOGO</div>
+        <div style="font-size: 14px; font-weight: 700; color: var(--wf-muted);">PEMERINTAH KABUPATEN PURBALINGGA</div>
+        <div style="font-size: 18px; font-weight: 800; margin: 4px 0 8px 0;">E-NOTULEN KEDINASAN</div>
+        <div style="font-size: 12px; color: var(--wf-muted); margin-bottom: 24px;">Sistem Informasi Risalah Rapat Digital Terpadu</div>
+
+        <div class="wf-box" style="padding: 20px; background: #f8fafc; margin-bottom: 20px;">
+          <div style="font-size: 12px; margin-bottom: 14px;">Silakan masuk menggunakan akun identitas tunggal aparatur sipil negara:</div>
+          <span class="wf-btn wf-btn-dark" style="width: 100%; padding: 12px; font-size: 13px;">🔐 Masuk Menggunakan SSO e-Akun</span>
+        </div>
+
+        <div style="font-size: 11px; color: var(--wf-muted); line-height: 1.5;">
+          Kendala akun atau verifikasi NIP dinas? Hubungi Administrator IT Dinkominfo Kabupaten Purbalingga.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 7. WIREFRAME 22: DASBOR UTAMA & STATISTIK OPD -->
+  <!-- ========================================================================= -->
+  <div class="wf-card-wrapper" id="wf-22">
+    <div class="wf-top-bar">
+      <div>
+        <span class="wf-badge-num">GAMBAR 22</span>
+        <span class="wf-title-text">Wireframe: Dasbor Ringkasan Notulen OPD & Metrik Analitik</span>
+      </div>
+      <button class="download-btn" onclick="downloadWireframe('canvas-22', 'Wireframe_22_Dashboard_OPD')">💾 Unduh PNG</button>
+    </div>
+    <div class="wireframe-canvas">
+      <div class="wf-screen" id="canvas-22" style="padding: 16px;">
+        <!-- Topbar inside Dashboard -->
+        <div class="wf-flex-between" style="border-bottom: 1.5px solid var(--wf-border); padding-bottom: 10px; margin-bottom: 16px;">
+          <div class="wf-logo-box">
+            <div class="wf-img-placeholder">LOGO</div>
+            <span>e-Notulen Purbalingga</span>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <input type="text" class="wf-input" style="width: 220px;" placeholder="🔍 Cari rapat (Ctrl + K)..." readonly>
+            <span class="wf-badge">👤 Budi S. (Operator OPD)</span>
+          </div>
+        </div>
+
+        <div class="wf-row">
+          <!-- Sidebar -->
+          <div style="width: 180px; border-right: 1.5px solid var(--wf-border); padding-right: 12px;">
+            <div style="font-size: 11px; font-weight: 700; color: var(--wf-muted); margin-bottom: 8px;">NAVIGASI UTAMA</div>
+            <div style="display: flex; flex-direction: column; gap: 4px; font-size: 12px;">
+              <span class="wf-btn wf-btn-dark" style="text-align: left; padding: 6px 10px;">📊 Dashboard</span>
+              <span class="wf-btn" style="text-align: left; padding: 6px 10px;">📑 Repositori Rapat</span>
+              <span class="wf-btn" style="text-align: left; padding: 6px 10px;">📈 Rekap Laporan</span>
+              <span class="wf-btn" style="text-align: left; padding: 6px 10px;">🏢 Kop Surat OPD</span>
+              <span class="wf-btn" style="text-align: left; padding: 6px 10px;">🗑️ Tempat Sampah</span>
+            </div>
+          </div>
+
+          <!-- Main Content Area -->
+          <div class="wf-col-1">
+            <div style="margin-bottom: 14px;">
+              <div style="font-size: 15px; font-weight: 700;">Selamat datang kembali, Budi Santoso 👋</div>
+              <div style="font-size: 11px; color: var(--wf-muted);">Dinas Komunikasi dan Informatika Kabupaten Purbalingga</div>
+            </div>
+
+            <!-- Metric Cards -->
+            <div class="wf-row" style="margin-bottom: 16px;">
+              <div class="wf-col-1 wf-box" style="text-align: center;">
+                <div style="font-size: 11px; color: var(--wf-muted);">Total Risalah</div>
+                <div style="font-size: 22px; font-weight: 800;">148</div>
+              </div>
+              <div class="wf-col-1 wf-box" style="text-align: center;">
+                <div style="font-size: 11px; color: var(--wf-muted);">Bulan Ini</div>
+                <div style="font-size: 22px; font-weight: 800;">16</div>
+              </div>
+              <div class="wf-col-1 wf-box" style="text-align: center;">
+                <div style="font-size: 11px; color: var(--wf-muted);">Rasio Dokumen</div>
+                <div style="font-size: 14px; font-weight: 800; margin-top: 6px;">134 Final / 14 Draf</div>
+              </div>
+            </div>
+
+            <!-- Chart & Feeds Simulation -->
+            <div class="wf-row">
+              <div class="wf-col-2 wf-box">
+                <div style="font-weight: 700; font-size: 12px; margin-bottom: 8px;">📈 Tren Risalah Rapat (12 Bulan)</div>
+                <div style="height: 100px; display: flex; align-items: flex-end; gap: 8px; padding: 10px; border-bottom: 1px solid var(--wf-border-light); justify-content: space-around;">
+                  <div style="width: 14px; height: 40%; background: var(--wf-border);"></div>
+                  <div style="width: 14px; height: 60%; background: var(--wf-border);"></div>
+                  <div style="width: 14px; height: 90%; background: var(--wf-border-dark);"></div>
+                  <div style="width: 14px; height: 75%; background: var(--wf-border);"></div>
+                  <div style="width: 14px; height: 50%; background: var(--wf-border);"></div>
+                  <div style="width: 14px; height: 85%; background: var(--wf-border-dark);"></div>
+                </div>
+                <div style="font-size: 10px; text-align: center; color: var(--wf-muted); margin-top: 4px;">Jan - Jun 2026</div>
+              </div>
+              <div class="wf-col-1 wf-box">
+                <div style="font-weight: 700; font-size: 12px; margin-bottom: 8px;">⚡ Aksi Cepat</div>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <span class="wf-btn wf-btn-dark" style="font-size: 11px; padding: 6px;">➕ Buat Notulen Baru</span>
+                  <span class="wf-btn" style="font-size: 11px; padding: 6px;">📊 Buka Rekap Laporan</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 8. WIREFRAME 23: TABEL REPOSITORI NOTULEN -->
+  <!-- ========================================================================= -->
+  <div class="wf-card-wrapper" id="wf-23">
+    <div class="wf-top-bar">
+      <div>
+        <span class="wf-badge-num">GAMBAR 23</span>
+        <span class="wf-title-text">Wireframe: Tabel Repositori Notulen, Paginasi & Bilah Penyaringan Data</span>
+      </div>
+      <button class="download-btn" onclick="downloadWireframe('canvas-23', 'Wireframe_23_Tabel_Repositori')">💾 Unduh PNG</button>
+    </div>
+    <div class="wireframe-canvas">
+      <div class="wf-screen" id="canvas-23" style="padding: 20px;">
+        <div class="wf-flex-between" style="margin-bottom: 16px;">
+          <div>
+            <div style="font-size: 16px; font-weight: 700;">Daftar Repositori Notulen Rapat</div>
+            <div style="font-size: 11px; color: var(--wf-muted);">Manajemen arsip dokumen naskah dinas kedinasan OPD</div>
+          </div>
+          <span class="wf-btn wf-btn-dark">➕ Buat Notulen Baru</span>
+        </div>
+
+        <!-- Filter Row -->
+        <div class="wf-box" style="background: #f8fafc; padding: 10px; margin-bottom: 14px; display: flex; gap: 10px; align-items: center;">
+          <input type="text" class="wf-input" style="flex: 2;" placeholder="🔍 Cari judul notulen, nama pejabat, atau tempat..." readonly>
+          <select class="wf-input" style="flex: 1;"><option>Status: Semua Status</option></select>
+          <input type="text" class="wf-input" style="flex: 1;" placeholder="📅 Rentang Tanggal" readonly>
+          <span class="wf-btn">Terapkan Filter</span>
+        </div>
+
+        <!-- Data Table -->
+        <table class="wf-table">
+          <thead>
+            <tr>
+              <th style="width: 5%;">No</th>
+              <th style="width: 15%;">Tanggal & Waktu</th>
+              <th style="width: 35%;">Agenda / Judul Rapat</th>
+              <th style="width: 20%;">Pimpinan & Penandatangan</th>
+              <th style="width: 10%;">Status</th>
+              <th style="width: 15%;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>24 Mar 2026<br/><span style="font-size: 10px; color: var(--wf-muted);">09:00 WIB</span></td>
+              <td><b>Rapat Koordinasi Penerapan Smart City</b><br/><span style="font-size: 11px; color: var(--wf-muted);">Ruang Rapat Kadis Lt. 2</span></td>
+              <td>Drs. Bambang Wijonarko, M.Si</td>
+              <td><span class="wf-badge wf-badge-success">Final</span></td>
+              <td>
+                <span class="wf-btn" style="padding: 2px 6px; font-size: 10px;">Lihat</span>
+                <span class="wf-btn" style="padding: 2px 6px; font-size: 10px;">PDF</span>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>20 Mar 2026<br/><span style="font-size: 10px; color: var(--wf-muted);">13:30 WIB</span></td>
+              <td><b>Koordinasi Pengamanan Siber & CSIRT</b><br/><span style="font-size: 11px; color: var(--wf-muted);">Aula DINKOMINFO</span></td>
+              <td>Agus Subagyo, S.Kom</td>
+              <td><span class="wf-badge wf-badge-warning">Draft</span></td>
+              <td>
+                <span class="wf-btn" style="padding: 2px 6px; font-size: 10px;">Edit</span>
+                <span class="wf-btn" style="padding: 2px 6px; font-size: 10px;">Hapus</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="wf-flex-between wf-mt-12" style="font-size: 11px; color: var(--wf-muted);">
+          <div>Menampilkan 1 - 2 dari 148 dokumen</div>
+          <div style="display: flex; gap: 4px;">
+            <span class="wf-btn" style="padding: 3px 8px;">Sebelumnya</span>
+            <span class="wf-btn wf-btn-dark" style="padding: 3px 8px;">1</span>
+            <span class="wf-btn" style="padding: 3px 8px;">2</span>
+            <span class="wf-btn" style="padding: 3px 8px;">Selanjutnya</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 9. WIREFRAME 24: COMMAND PALETTE (CTRL + K) -->
+  <!-- ========================================================================= -->
+  <div class="wf-card-wrapper" id="wf-24">
+    <div class="wf-top-bar">
+      <div>
+        <span class="wf-badge-num">GAMBAR 24</span>
+        <span class="wf-title-text">Wireframe: Dialog Pintasan Cepat Global Command Palette (Ctrl + K)</span>
+      </div>
+      <button class="download-btn" onclick="downloadWireframe('canvas-24', 'Wireframe_24_Command_Palette')">💾 Unduh PNG</button>
+    </div>
+    <div class="wireframe-canvas" style="background: rgba(15, 23, 42, 0.4);">
+      <div class="wf-screen" id="canvas-24" style="padding: 20px; max-width: 540px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+        <!-- Search Input Bar -->
+        <div style="display: flex; align-items: center; gap: 10px; border-bottom: 2px solid var(--wf-border-dark); padding-bottom: 10px; margin-bottom: 14px;">
+          <span style="font-size: 18px;">🔍</span>
+          <input type="text" class="wf-input" style="border: none; background: transparent; font-size: 14px; font-weight: 600;" value="Rakor" readonly>
+          <span class="wf-badge">ESC</span>
+        </div>
+
+        <!-- Results List -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="font-size: 11px; font-weight: 700; color: var(--wf-muted);">AKSI & NAVIGASI CEPAT:</div>
+          <div class="wf-box" style="padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; background: #f1f5f9; border-color: var(--wf-border-dark);">
+            <div>
+              <div style="font-weight: 700; font-size: 12px;">➕ Buat Notulen Baru</div>
+              <div style="font-size: 11px; color: var(--wf-muted);">Inisiasi formulir risalah rapat dinas baru</div>
+            </div>
+            <span class="wf-badge">Enter</span>
+          </div>
+
+          <div style="font-size: 11px; font-weight: 700; color: var(--wf-muted); margin-top: 6px;">RISALAH RAPAT TERKAIT:</div>
+          <div class="wf-box" style="padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 700; font-size: 12px;">📑 Rakor Penerapan Smart City 2026</div>
+              <div style="font-size: 11px; color: var(--wf-muted);">24 Maret 2026 • Status: Final</div>
+            </div>
+            <span class="wf-badge">Buka</span>
+          </div>
+          <div class="wf-box" style="padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 700; font-size: 12px;">📑 Rakor Evaluasi Jaringan FO OPD</div>
+              <div style="font-size: 11px; color: var(--wf-muted);">15 Maret 2026 • Status: Draft</div>
+            </div>
+            <span class="wf-badge">Buka</span>
+          </div>
+        </div>
+
+        <!-- Footer Shortcuts -->
+        <div class="wf-flex-between wf-mt-16" style="border-top: 1px solid var(--wf-border-light); padding-top: 10px; font-size: 11px; color: var(--wf-muted);">
+          <div><span>[↑/↓] Navigasi</span> • <span>[Enter] Pilih</span> • <span>[Esc] Tutup</span></div>
+          <div>Global Command Palette</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 10. WIREFRAME 25: TRASH & RESTORE -->
+  <!-- ========================================================================= -->
+  <div class="wf-card-wrapper" id="wf-25">
+    <div class="wf-top-bar">
+      <div>
+        <span class="wf-badge-num">GAMBAR 25</span>
+        <span class="wf-title-text">Wireframe: Pengelolaan Sampah Lunak (Trash / Restore) & Duplikasi</span>
+      </div>
+      <button class="download-btn" onclick="downloadWireframe('canvas-25', 'Wireframe_25_Trash_Restore')">💾 Unduh PNG</button>
+    </div>
+    <div class="wireframe-canvas">
+      <div class="wf-screen" id="canvas-25" style="padding: 20px;">
+        <div class="wf-flex-between" style="margin-bottom: 14px;">
+          <div>
+            <div style="font-size: 16px; font-weight: 700;">Tempat Pembuangan Sementara (Trash)</div>
+            <div style="font-size: 11px; color: var(--wf-muted);">Daftar dokumen notulen yang terhapus lunak (soft delete)</div>
+          </div>
+          <span class="wf-btn">← Kembali ke Repositori</span>
+        </div>
+
+        <div class="wf-box" style="background: #fffbeb; border-color: #fde68a; color: #92400e; font-size: 12px; margin-bottom: 16px;">
+          ⚠️ <b>Pemberitahuan Sistem:</b> Dokumen dalam tempat sampah akan disimpan selama 30 hari sebelum dimusnahkan permanen. Anda dapat memulihkan naskah ke daftar aktif kapan saja.
+        </div>
+
+        <!-- Trash Table -->
+        <table class="wf-table">
+          <thead>
+            <tr>
+              <th style="width: 40%;">Judul Notulen Terhapus</th>
+              <th style="width: 20%;">Dihapus Oleh</th>
+              <th style="width: 20%;">Tanggal Dihapus</th>
+              <th style="width: 20%;">Aksi Pemulihan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Rapat Teknis Pembahasan CCTV Titik Kota</b><br/><span style="font-size: 11px; color: var(--wf-muted);">OPD: Dinas Perhubungan</span></td>
+              <td>Budi Santoso</td>
+              <td>12 Mar 2026</td>
+              <td>
+                <span class="wf-btn" style="padding: 3px 8px; font-size: 11px;">🔄 Pulihkan</span>
+                <span class="wf-btn" style="padding: 3px 8px; font-size: 11px; color: #991b1b;">✕ Musnahkan</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Restore Confirmation Modal Preview -->
+        <div class="wf-box wf-mt-16" style="border: 2px solid var(--wf-border-dark); background: #f8fafc; padding: 16px; max-width: 460px; margin-left: auto; margin-right: auto; text-align: center;">
+          <div style="font-size: 13px; font-weight: 700; margin-bottom: 6px;">Konfirmasi Pemulihan Dokumen</div>
+          <div style="font-size: 11px; color: var(--wf-muted); margin-bottom: 14px;">Apakah Anda yakin ingin memulihkan naskah "Rapat Teknis Pembahasan CCTV" kembali ke repositori aktif?</div>
+          <div style="display: flex; justify-content: center; gap: 8px;">
+            <span class="wf-btn">Batal</span>
+            <span class="wf-btn wf-btn-dark">Ya, Pulihkan Naskah</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function downloadWireframe(elementId, filename) {
+      const el = document.getElementById(elementId);
+      html2canvas(el, {
+        scale: 2,
+        backgroundColor: '#ffffff'
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = filename + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+  </script>
+</body>
+</html>

@@ -77,6 +77,7 @@ export interface Notulen {
   created_at: string;
   updated_at: string;
   deleted_at?: string;
+  deleted_by_name?: string;
 }
 
 // ── List item (lighter shape for list view) ──────────────────
@@ -100,6 +101,8 @@ export interface NotulenListItem
     | "attachment_count"
     | "created_at"
     | "updated_at"
+    | "deleted_at"
+    | "deleted_by_name"
   > {}
 
 // ── Form input types ─────────────────────────────────────────

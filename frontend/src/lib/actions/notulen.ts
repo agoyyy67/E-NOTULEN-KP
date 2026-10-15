@@ -55,6 +55,9 @@ export async function getNotulenList(
     // Apply status filter
     if (params.status && params.status !== "all") {
       items = items.filter((n) => n.status === params.status);
+    } else {
+      // By default in regular list view, trash/deleted documents are excluded
+      items = items.filter((n) => n.status !== "deleted");
     }
 
     // Apply OPD filter
@@ -308,13 +311,17 @@ export async function autoSaveNotulen(
 export async function deleteNotulen(id: string): Promise<void> {
   if (USE_MOCK) {
     await sleep(300);
+    const now = new Date().toISOString();
     if (mockNotulen[id]) {
       mockNotulen[id].status = "deleted";
-      mockNotulen[id].deleted_at = new Date().toISOString();
+      mockNotulen[id].deleted_at = now;
+      mockNotulen[id].deleted_by_name = "Budi Santoso";
     }
     const idx = mockNotulenList.findIndex((item) => item.id === id);
     if (idx !== -1) {
       mockNotulenList[idx].status = "deleted";
+      mockNotulenList[idx].deleted_at = now;
+      mockNotulenList[idx].deleted_by_name = "Budi Santoso";
     }
     return;
   }
@@ -330,10 +337,13 @@ export async function restoreNotulen(id: string): Promise<Notulen> {
     if (mockNotulen[id]) {
       mockNotulen[id].status = "draft";
       mockNotulen[id].deleted_at = undefined;
+      mockNotulen[id].deleted_by_name = undefined;
     }
     const idx = mockNotulenList.findIndex((item) => item.id === id);
     if (idx !== -1) {
       mockNotulenList[idx].status = "draft";
+      mockNotulenList[idx].deleted_at = undefined;
+      mockNotulenList[idx].deleted_by_name = undefined;
     }
     return mockNotulen[id] || ({} as Notulen);
   }
@@ -343,6 +353,22 @@ export async function restoreNotulen(id: string): Promise<Notulen> {
     method: "POST",
   });
   return mapNotulenResponse<Notulen>(json.data);
+}
+
+// ── Permanently destroy / force delete from trash ─────────────
+export async function forceDeleteNotulen(id: string): Promise<void> {
+  if (USE_MOCK) {
+    await sleep(300);
+    delete mockNotulen[id];
+    const idx = mockNotulenList.findIndex((item) => item.id === id);
+    if (idx !== -1) {
+      mockNotulenList.splice(idx, 1);
+    }
+    return;
+  }
+
+  // ── Production ─────────────────────────────────────────────
+  await apiClient(`/notulen/${id}/force`, { method: "DELETE" });
 }
 
 // ── Duplicate notulen ─────────────────────────────────────────

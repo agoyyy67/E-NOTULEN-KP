@@ -519,6 +519,79 @@ Navigasi keyboard-first berkecepatan tinggi yang dapat dipanggil dari halaman ma
 
 ---
 
+## 🛡️ Alur 10: Penelusuran & Verifikasi Keabsahan Dokumen Fisik via QR Code (`/verifikasi/[id]`)
+
+Fitur verifikasi keabsahan publik menjamin integritas hukum risalah rapat dinas hasil cetakan fisik. Saat dokumen disahkan menjadi status `final`, sistem secara otomatis menyematkan segel kode QR verifikasi dinamis pada blok tanda tangan (`SignatureSection.tsx`) dan cetakan PDF resmi. Siapa pun dapat memindai segel QR tersebut menggunakan kamera ponsel pintar untuk memeriksa validitas naskah langsung ke pangkalan data arsip resmi Pemkab Purbalingga tanpa perlu login ke sistem.
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                 ALUR PENELUSURAN DAN PEMBUKTIAN KEABSAHAN                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    Notulis / Operator Memfinalisasi Risalah Rapat (Status: draft -> final)
+                                 │
+                                 ▼
+    Sistem Mengunci Editor Tiptap (Read-Only) & Menerbitkan Segel Kode QR:
+    ┌──────────────────────────────────────────────────┐
+    │ [QR CODE VERIFIKASI RESMI]                       │
+    │ https://enotulen.purbalinggakab.go.id/           │
+    │ verifikasi/7f8a9b1c-2d3e-4f5a-6b7c-8d9e0f1a2b3c  │
+    └──────────────────────────────────────────────────┘
+                                 │
+                                 ▼ Dicetak ke Kertas Fisik (PDF Resmi A4)
+    Naskah Fisik Tersebar ke Pimpinan / Aparatur / Pihak Berkepentingan
+                                 │
+                                 ▼ Pemeriksa memindai segel QR via kamera ponsel
+    Next.js Middleware Meloloskan Rute Publik (Bypass SSO Keycloak):
+    GET /verifikasi/[id] -> API: GET /api/v1/public/verifikasi/[id]
+```
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                          WIREFRAME HALAMAN PUBLIK VERIFIKASI DOKUMEN (/verifikasi/[id])                   │
+├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  [Logo Pemkab]  PEMERINTAH KABUPATEN PURBALINGGA                                                         │
+│                 Portal Resmi Verifikasi Risalah Rapat Digital (e-Notulen)                                │
+├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                          │
+│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────┐  │
+│  │  🛡️ STATUS KEABSAHAN DOKUMEN:                                                                       │  │
+│  │                                                                                                    │  │
+│  │  [ ✅ DOKUMEN RESMI & TERVERIFIKASI ]   (Warna Latar: Emerald / Hijau Kedinasan)                   │  │
+│  │  "Risalah rapat ini sah terdaftar pada pangkalan data arsip resmi Pemerintah Kabupaten Purbalingga" │  │
+│  └────────────────────────────────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                                          │
+│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────┐  │
+│  │  RINCIAN INFORMASI RISALAH RAPAT DINAS                                                             │  │
+│  │  ────────────────────────────────────────────────────────────────────────────────────────────────  │  │
+│  │  Judul Rapat        : Rapat Koordinasi Penerapan Smart City Purbalingga 2026                       │  │
+│  │  Tanggal Pelaksanaan: Selasa, 24 Maret 2026                                                        │  │
+│  │  Waktu Acara        : 09:00 s.d 12:30 WIB                                                          │  │
+│  │  Tempat / Lokasi    : Ruang Rapat Kadis Lt. 2, DINKOMINFO Purbalingga                              │  │
+│  │  OPD Penyelenggara  : Dinas Komunikasi dan Informatika Kabupaten Purbalingga                       │  │
+│  │  ID Naskah Arsip    : 7f8a9b1c-2d3e-4f5a-6b7c-8d9e0f1a2b3c                                         │  │
+│  └────────────────────────────────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                                          │
+│  ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────────┐  │
+│  │  PEJABAT PENANDATANGAN NASKAH:               │  │  NOTULIS / PENCATAT RESMI:                      │  │
+│  │  Nama   : Drs. Bambang Wijonarko, M.Si       │  │  Nama   : Budi Santoso, S.Kom                   │  │
+│  │  NIP    : 19710315 199603 1 002              │  │  NIP    : 19850101 201001 1 001                 │  │
+│  │  Jabatan: Kepala Dinas Kominfo Purbalingga   │  │  Jabatan: Pranata Komputer Ahli Muda            │  │
+│  └──────────────────────────────────────────────┘  └─────────────────────────────────────────────────┘  │
+│                                                                                                          │
+│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────┐  │
+│  │  Waktu Pengesahan Resmi : 24 Maret 2026 pukul 14:35 WIB (Terkunci Sistem)                           │  │
+│  │                                                                                                    │  │
+│  │  [ 📥 Unduh Salinan Berkas Digital Resmi (PDF A4) ]                                                 │  │
+│  └────────────────────────────────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                                          │
+│  Catatan Hukum: Dokumen ini telah diverifikasi melalui sistem segel digital kriptografi e-Notulen        │
+│  berdasarkan Peraturan Bupati Purbalingga tentang Tata Naskah Dinas Elektronik.                          │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## 🔄 State Machine: Siklus Hidup Dokumen Notulen
 
 ```mermaid

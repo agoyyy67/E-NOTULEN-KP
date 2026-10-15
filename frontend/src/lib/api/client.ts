@@ -58,6 +58,8 @@ const NOTULEN_FIELD_MAP: FieldMap = {
   created_by_name: "created_by_name",
   attendee_count: "attendee_count",
   attachment_count: "attachment_count",
+  deleted_at: "deleted_at",
+  deleted_by_name: "deleted_by_name",
 };
 
 const ATTENDEE_FIELD_MAP: FieldMap = {

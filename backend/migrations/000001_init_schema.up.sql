@@ -102,3 +102,5 @@ CREATE INDEX IF NOT EXISTS idx_notulen_auto_saves_notulen_id ON notulen_auto_sav
 ALTER TABLE notulen ADD COLUMN IF NOT EXISTS signed_by VARCHAR(255);
 ALTER TABLE notulen ADD COLUMN IF NOT EXISTS signed_by_position VARCHAR(255);
 ALTER TABLE notulen ADD COLUMN IF NOT EXISTS signed_by_nip VARCHAR(30);
+ALTER TABLE notulen ADD COLUMN IF NOT EXISTS deleted_by_name VARCHAR(255);
+ALTER TABLE notulen ADD COLUMN IF NOT EXISTS deleted_by_sub UUID;
